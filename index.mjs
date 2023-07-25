@@ -1,7 +1,11 @@
 import readLine from "readline-sync";
 import chalk from "chalk";
 
-const taskList = [];
+const taskList = [{
+  id:"1",
+  description:"one",
+  status: true,
+}];
 
 const addTask = () => {
   const id = readLine.question("Enter the task id: ");
@@ -18,15 +22,19 @@ const addTask = () => {
 };
 
 const deleteTask = () => {
+  return new Promise((resolve, reject) => {
     const idTask = readLine.question("Enter the id of the task to be deleted: ");
+    setTimeout(() => {
     if(taskList.find((task) => task.id === idTask)){
-        const index = taskList.findIndex((task) => task.id === idTask);
-        const taskName = taskList[index].description;
-        taskList.splice(index,1);
-        console.log(chalk.bgYellow.bold(`task [${taskName}] successfully eliminated`));
-    }else{
-        console.log(chalk.red.bold("ID invalid or does not exist in the list. Try again"));
-    }
+      const index = taskList.findIndex((task) => task.id === idTask);
+      const taskName = taskList[index].description;
+      taskList.splice(index,1);
+        resolve(taskName);
+      }else{
+        reject( new Error(chalk.red.bold("ID invalid or does not exist in the list. Try again")));
+      }
+    }, 3000);
+  });
 }
 
 const completeTask = () => {
@@ -56,7 +64,7 @@ const printTasks = () => {
 const startApp = () => {
   let exitApp = false;
 
-  while (!exitApp) {
+  /* while (!exitApp) { */
     console.log(chalk.bgCyan.bold("\nTask list Node"));
     console.log(chalk.bold("Select an option:"));
     console.log("1. Add task");
@@ -72,7 +80,14 @@ const startApp = () => {
         addTask();
         break;
       case 2:
-        deleteTask();
+        deleteTask()
+          .then((task) => {
+            console.log(chalk.bgYellow.bold(`task [${task}] successfully eliminated`));
+          })
+          .catch((error) => {
+            console.log(chalk.bgRed.bold("Error resolving promise:"));
+            console.log(error.message);
+          });
         break;
       case 3:
         completeTask();
@@ -89,7 +104,7 @@ const startApp = () => {
         console.log(chalk.bgRed("invalid option. Choose another option"));
         break;
     }
-  }
+  /* } */
 };
 
 startApp();
