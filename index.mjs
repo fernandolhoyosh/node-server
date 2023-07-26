@@ -61,10 +61,10 @@ const printTasks = () => {
     });
 }
 
-const startApp = () => {
+const startApp = async () => {
   let exitApp = false;
 
-  /* while (!exitApp) { */
+  while (!exitApp) {
     console.log(chalk.bgCyan.bold("\nTask list Node"));
     console.log(chalk.bold("Select an option:"));
     console.log("1. Add task");
@@ -80,14 +80,21 @@ const startApp = () => {
         addTask();
         break;
       case 2:
-        deleteTask()
+        /* deleteTask()
           .then((task) => {
             console.log(chalk.bgYellow.bold(`task [${task}] successfully eliminated`));
           })
           .catch((error) => {
             console.log(chalk.bgRed.bold("Error resolving promise:"));
             console.log(error.message);
-          });
+          }); */
+          try {
+            const task = await deleteTask(); // Wait for the Promise to resolve
+            console.log(chalk.bgYellow.bold(`Task [${task}] successfully eliminated`));
+          } catch (error) {
+            console.log(chalk.bgRed.bold("Error resolving promise:"));
+            console.log(error.message);
+          }
         break;
       case 3:
         completeTask();
@@ -104,7 +111,7 @@ const startApp = () => {
         console.log(chalk.bgRed("invalid option. Choose another option"));
         break;
     }
-  /* } */
+  }
 };
 
 startApp();
