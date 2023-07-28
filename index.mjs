@@ -8,18 +8,20 @@ const taskList = [{
 }];
 
 const addTask = () => {
-  const id = readLine.question("Enter the task id: ");
-  const description = readLine.question("Enter the task description: ");
-
-  const newTask = {
-    id: id,
-    description: description,
-    status: false,
-  };
-
-  taskList.push(newTask);
-  console.log(chalk.bgGreen.bold("Task successfully added"));
-};
+  return new Promise((resolve) => {
+    const id = readLine.question("Enter the task id: ");
+    const description = readLine.question("Enter the task description: ");
+    
+    const newTask = {
+      id: id,
+      description: description,
+      status: false,
+    };
+    
+    taskList.push(newTask);
+    resolve(chalk.bgGreen.bold("Task successfully added"));
+  });
+}
 
 const deleteTask = (id) => {
   return new Promise((resolve, reject) => {
@@ -43,8 +45,8 @@ const completeTask = (id) => {
         taskList.forEach((task) => {
             if (task.id === id) {
                 task.status = true;
+                resolve(chalk.green(`Task [${task.description}] completed!`));
               }
-              resolve(chalk.green(`Task [${task.description}] completed!`));
             });
     } else {
       reject( new Error(chalk.red.bold("ID invalid or does not exist in the list. Try again")));
@@ -55,10 +57,10 @@ const completeTask = (id) => {
 const printTasks = () => {
     console.log(chalk.blue.underline.bold("\nTask list:\n"));
     taskList.map((task)=>{
-        const id = chalk.cyan.bold(task.id);
-        const description = chalk.cyan.bold(task.description);
-        const status = task.status ? chalk.green("Completed") : chalk.yellow("Pending");
-        console.log(`id: ${id} | task: ${description} | status: ${status}`);
+      const id = chalk.cyan.bold(task.id);
+      const description = chalk.cyan.bold(task.description);
+      const status = task.status ? chalk.green("Completed") : chalk.yellow("Pending");
+      console.log(`id: ${id} | task: ${description} | status: ${status}`);
     });
 }
 
@@ -79,19 +81,15 @@ async function startApp() {
 
     switch (option) {
       case 1:
-        addTask();
+        try {
+          const done = await addTask();
+          console.log(done);
+        } catch (error) {
+          console.error(error);
+        }
         break;
       case 2:
         idInput = readLine.question("Enter the id of the task to be deleted: ");
-        /* deleteTask(idTaskDelete)
-          .then((task) => {
-            console.log(chalk.bgYellow.bold(`task [${task}] successfully eliminated`));
-          })
-          .catch((error) => {
-            console.log(chalk.bgRed.bold("Error resolving promise:"));
-            console.log(error.message);
-          }); */
-
           try {
             const task = await deleteTask(idInput); // Wait for the Promise to resolve
             console.log(chalk.bgYellow.bold(`Task [${task}] successfully eliminated`));
@@ -103,8 +101,8 @@ async function startApp() {
       case 3:
         idInput = readLine.question("Enter the id of the task to be completed: ");
           try{
-            const test = await completeTask(idInput);
-            console.log(test);
+            const done = await completeTask(idInput);
+            console.log(done);
           } catch (error) {
             console.log(error.message);
           }
