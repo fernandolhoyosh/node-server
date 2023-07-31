@@ -1,68 +1,16 @@
 import readLine from "readline-sync";
 import chalk from "chalk";
 
+import { addTask } from "./modules/moduleAddTask.mjs";
+import { deleteTask } from "./modules/moduleDeleteTask.mjs";
+import { completeTask } from "./modules/moduleCompleteTask.mjs";
+import { printTasks } from "./modules/modulePrintTasks.mjs";
+
 const taskList = [{
   id:"1",
   description:"one",
   status: false,
 }];
-
-const addTask = () => {
-  return new Promise((resolve) => {
-    const id = readLine.question("Enter the task id: ");
-    const description = readLine.question("Enter the task description: ");
-    
-    const newTask = {
-      id: id,
-      description: description,
-      status: false,
-    };
-    
-    taskList.push(newTask);
-    resolve(chalk.bgGreen.bold("Task successfully added"));
-  });
-}
-
-const deleteTask = (id) => {
-  return new Promise((resolve, reject) => {
-    console.log(chalk.inverse("processing request..."));
-    setTimeout(() => {
-    if(taskList.find((task) => task.id === id)){
-      const index = taskList.findIndex((task) => task.id === id);
-      const taskName = taskList[index].description;
-      taskList.splice(index,1);
-        resolve(taskName);
-      }else{
-        reject( new Error(chalk.red.bold("ID invalid or does not exist in the list. Try again")));
-      }
-    }, 3000);
-  });
-}
-
-const completeTask = (id) => {
-  return new Promise((resolve, reject) => {
-    if (taskList.find((task) => task.id === id)) {
-        taskList.forEach((task) => {
-            if (task.id === id) {
-                task.status = true;
-                resolve(chalk.green(`Task [${task.description}] completed!`));
-              }
-            });
-    } else {
-      reject( new Error(chalk.red.bold("ID invalid or does not exist in the list. Try again")));
-    }
-  });
-}
-
-const printTasks = () => {
-    console.log(chalk.blue.underline.bold("\nTask list:\n"));
-    taskList.map((task)=>{
-      const id = chalk.cyan.bold(task.id);
-      const description = chalk.cyan.bold(task.description);
-      const status = task.status ? chalk.green("Completed") : chalk.yellow("Pending");
-      console.log(`id: ${id} | task: ${description} | status: ${status}`);
-    });
-}
 
 async function startApp() {
   let exitApp = false;
@@ -82,7 +30,7 @@ async function startApp() {
     switch (option) {
       case 1:
         try {
-          const done = await addTask();
+          const done = await addTask(taskList);
           console.log(done);
         } catch (error) {
           console.error(error);
@@ -91,7 +39,7 @@ async function startApp() {
       case 2:
         idInput = readLine.question("Enter the id of the task to be deleted: ");
           try {
-            const task = await deleteTask(idInput); // Wait for the Promise to resolve
+            const task = await deleteTask(taskList, idInput);
             console.log(chalk.bgYellow.bold(`Task [${task}] successfully eliminated`));
           } catch (error) {
             console.log(chalk.bgRed.bold("Error resolving promise:"));
@@ -101,14 +49,14 @@ async function startApp() {
       case 3:
         idInput = readLine.question("Enter the id of the task to be completed: ");
           try{
-            const done = await completeTask(idInput);
+            const done = await completeTask(taskList, idInput);
             console.log(done);
           } catch (error) {
             console.log(error.message);
           }
         break;
       case 4:
-        printTasks();
+        printTasks(taskList);
         break;
       case 5:
         exitApp = true;
