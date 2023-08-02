@@ -1,4 +1,4 @@
-exports.serviceTasks = () => {
+const tasks = () => {
 
   const tasksList = [
     {
@@ -26,3 +26,5 @@ exports.serviceTasks = () => {
   return tasksList;
 
 };
+
+module.exports = tasks;
