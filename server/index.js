@@ -1,5 +1,6 @@
-// llamo el archivo de la lista de tareas
+// importamos el archivo de la lista de tareas
 const moduleTasks = require('../data/tasks');
+const taskList = moduleTasks(); // guardo las tareas
 
 const http = require("http");
 const port = 3000;
@@ -9,7 +10,7 @@ const server = http.createServer((req, res) => {
   console.log("Se ha realizado una solicitud al servidor.");
 
   // Convertimos la lista de tareas recibida del modulo en formato JSON
-  const data = JSON.stringify(moduleTasks.tasksList);
+  const data = JSON.stringify(taskList);
 
   if (req.url === '/' && req.method === 'GET') {
     // Mensaje de bienvenida al cliente en la ruta de inicio
