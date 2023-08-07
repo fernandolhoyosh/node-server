@@ -22,6 +22,7 @@ El usuario usaria esta aplicacion por las siguientes funcionalidades importantes
 
 Print de la app listado de tareas en Node:
 
+![image](https://github.com/fernandolhoyosh/node-server/assets/108826210/31082cc2-4ed6-4051-b166-7b5064c8e566)
 
 
 
