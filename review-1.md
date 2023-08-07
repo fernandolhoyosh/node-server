@@ -20,7 +20,7 @@ El usuario usaria esta aplicacion por las siguientes funcionalidades importantes
 
 - Las funcionalidades de agregar, eliminar y completar tareas se solicitan como servicios en el cual el programa espera que se resuelva las solicitudes del usuario y se le envia una respuesta al usuario.
 
-Print de la app listado de tareas en Node:
+- Print de la app listado de tareas en Node:
 
 ![image](https://github.com/fernandolhoyosh/node-server/assets/108826210/31082cc2-4ed6-4051-b166-7b5064c8e566)
 
